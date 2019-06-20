@@ -231,11 +231,11 @@ namespace WindowsFormsApp1
                 DateTime dt = DateTime.Now;
                 if (dt.ToString("HH:mm").IndexOf("14:") != -1|| dt.ToString("HH:mm").IndexOf("15:") != -1||dt.ToString("HH:mm").IndexOf("16:") != -1)
                 {
-                    this.Visible = false;
+                    this.Visible = true;
                 }
                 else
                 {
-                    this.Visible = true;
+                    this.Visible = false;
                 }
             }
         }

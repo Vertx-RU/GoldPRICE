@@ -46,6 +46,8 @@
             this.percent = new System.Windows.Forms.Label();
             this.ppercent = new System.Windows.Forms.Label();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.concernModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ModelTimer = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -61,15 +63,16 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.concernModelToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(97, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(198, 70);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -215,6 +218,19 @@
             this.timer2.Interval = 5000;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
+            // concernModelToolStripMenuItem
+            // 
+            this.concernModelToolStripMenuItem.MergeIndex = 1;
+            this.concernModelToolStripMenuItem.Name = "concernModelToolStripMenuItem";
+            this.concernModelToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.concernModelToolStripMenuItem.Text = "Start Concern Model";
+            this.concernModelToolStripMenuItem.Click += new System.EventHandler(this.concernModelToolStripMenuItem_Click);
+            // 
+            // ModelTimer
+            // 
+            this.ModelTimer.Interval = 1000;
+            this.ModelTimer.Tick += new System.EventHandler(this.ModelTimer_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -255,6 +271,8 @@
         private System.Windows.Forms.Label ppercent;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.ToolStripMenuItem concernModelToolStripMenuItem;
+        private System.Windows.Forms.Timer ModelTimer;
     }
 }
 

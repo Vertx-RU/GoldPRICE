@@ -47,23 +47,31 @@ namespace WindowsFormsApp1
                 string[] tmp = File.ReadAllText("PriceList.txt").Split(new string[] { "\r\n" }, StringSplitOptions.None);
                 for (int i = 0; i < tmp.Length; i++)
                 {
-                    if (min == 0 && max == 0)
+                    try
                     {
-                        min = Convert.ToDouble(tmp[i]);
-                        max = Convert.ToDouble(tmp[i]);
-                    }
-                    if (tmp[i] != "")
-                    {
-                        if (min > Convert.ToDouble(tmp[i]))
+                        if (min == 0 && max == 0)
                         {
                             min = Convert.ToDouble(tmp[i]);
-                        }
-                        if (max < Convert.ToDouble(tmp[i]))
-                        {
                             max = Convert.ToDouble(tmp[i]);
                         }
-                        chart1.Series[0].Points.Add(Convert.ToDouble(tmp[i]));
+                        if (tmp[i] != "")
+                        {
+                            if (min > Convert.ToDouble(tmp[i]))
+                            {
+                                min = Convert.ToDouble(tmp[i]);
+                            }
+                            if (max < Convert.ToDouble(tmp[i]))
+                            {
+                                max = Convert.ToDouble(tmp[i]);
+                            }
+                            chart1.Series[0].Points.Add(Convert.ToDouble(tmp[i]));
+                        }
                     }
+                    catch
+                    {
+                        //start Initial configuration.....
+                    }
+
                 }
                 if (min != 0 && max != 0)
                 {

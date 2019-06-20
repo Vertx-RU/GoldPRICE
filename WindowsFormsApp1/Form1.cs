@@ -42,6 +42,7 @@ namespace WindowsFormsApp1
             this.TopMost = true;
             double min = 0;
             double max = 0;
+            //
             if (File.Exists("PriceList.txt"))
             {
                 string[] tmp = File.ReadAllText("PriceList.txt").Split(new string[] { "\r\n" }, StringSplitOptions.None);

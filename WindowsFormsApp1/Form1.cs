@@ -122,6 +122,7 @@ namespace WindowsFormsApp1
                 chart1.ChartAreas[0].AxisY.Minimum = neemin;
                 chart1.ChartAreas[0].AxisY.Maximum = newmax;
             }
+//test
             if (first)
             {
                 first = false;

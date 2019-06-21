@@ -6,3 +6,4 @@ D:\GOLD\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.Gene
 D:\GOLD\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CoreCompileInputs.cache
 D:\GOLD\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.exe
 D:\GOLD\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.pdb
+D:\GOLD\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Home.resources

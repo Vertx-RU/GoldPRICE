@@ -30,6 +30,10 @@ namespace WindowsFormsApp1
         private int enterX;
         private int enterY;
         bool first = true;
+        bool concern = false;//默认关闭状态
+        System.Windows.Forms.NotifyIcon notifyIcon = null;
+        double min = 0;
+        double max = 0;
         private void Form1_Load(object sender, EventArgs e)
         {
             this.Location = new Point(0, 0);
@@ -40,9 +44,7 @@ namespace WindowsFormsApp1
             browser.Navigate("http://fund.eastmoney.com/002611.html?spm=aladin");
             browser.DocumentCompleted += Browser_DocumentCompleted;
             this.TopMost = true;
-            double min = 0;
-            double max = 0;
-            //
+
             if (File.Exists("PriceList.txt"))
             {
                 string[] tmp = File.ReadAllText("PriceList.txt").Split(new string[] { "\r\n" }, StringSplitOptions.None);
@@ -52,20 +54,20 @@ namespace WindowsFormsApp1
                     {
                         if (min == 0 && max == 0)
                         {
-                            min = Convert.ToDouble(tmp[i]);
+                            min = Convert.ToDouble(tmp[i].Replace("\r\n",""));
                             max = Convert.ToDouble(tmp[i]);
                         }
                         if (tmp[i] != "")
                         {
-                            if (min > Convert.ToDouble(tmp[i]))
+                            if (min > Convert.ToDouble(tmp[i].Replace("\r\n", "")))
                             {
-                                min = Convert.ToDouble(tmp[i]);
+                                min = Convert.ToDouble(tmp[i].Replace("\r\n", ""));
                             }
-                            if (max < Convert.ToDouble(tmp[i]))
+                            if (max < Convert.ToDouble(tmp[i].Replace("\r\n", "")))
                             {
-                                max = Convert.ToDouble(tmp[i]);
+                                max = Convert.ToDouble(tmp[i].Replace("\r\n", ""));
                             }
-                            chart1.Series[0].Points.Add(Convert.ToDouble(tmp[i]));
+                            chart1.Series[0].Points.Add(Convert.ToDouble(tmp[i].Replace("\r\n", "")));
                         }
                     }
                     catch
@@ -76,8 +78,15 @@ namespace WindowsFormsApp1
                 }
                 if (min != 0 && max != 0)
                 {
-                    chart1.ChartAreas[0].AxisY.Minimum = min;
-                    chart1.ChartAreas[0].AxisY.Maximum = max;
+                    try
+                    {
+                        chart1.ChartAreas[0].AxisY.Minimum = min;
+                        chart1.ChartAreas[0].AxisY.Maximum = max;
+                    }
+                    catch
+                    {
+
+                    }
                 }
             }
             else
@@ -94,8 +103,7 @@ namespace WindowsFormsApp1
             timer1.Start();
             timer2.Start();
         }
-        double newmax = 0;
-        double neemin = 0;
+
         double nowprice = 0;
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -110,26 +118,26 @@ namespace WindowsFormsApp1
             price.Text = Convert.ToDouble(element.TextContent) * 285 + " per/g";
             percent.Text = element2.TextContent;
             ppercent.Text = element3.TextContent;
-            if (neemin != 0)
+            if (min != 0)
             {
-                if (Convert.ToDouble(element.TextContent) * 285 < neemin)
+                if (Convert.ToDouble(element.TextContent) * 285 < min)
                 {
-                    neemin = Convert.ToDouble(element.TextContent) * 285;
+                    min = Convert.ToDouble(element.TextContent) * 285;
                 }
-                if (Convert.ToDouble(element.TextContent) * 285 > newmax && neemin != 0 && Convert.ToDouble(element.TextContent) * 285 > neemin)
+                if (Convert.ToDouble(element.TextContent) * 285 > max && min != 0 && Convert.ToDouble(element.TextContent) * 285 > min)
                 {
-                    newmax = Convert.ToDouble(element.TextContent) * 285;
+                    max = Convert.ToDouble(element.TextContent) * 285;
                 }
             }
             else
             {
-                neemin = Convert.ToDouble(element.TextContent) * 285;
-                nowprice = neemin;
+                min = Convert.ToDouble(element.TextContent) * 285;
+                nowprice = min;
             }
-            if (neemin != 0 && newmax != 0)
+            if (min != 0 && max != 0)
             {
-                chart1.ChartAreas[0].AxisY.Minimum = neemin;
-                chart1.ChartAreas[0].AxisY.Maximum = newmax;
+                chart1.ChartAreas[0].AxisY.Minimum = min;
+                chart1.ChartAreas[0].AxisY.Maximum = max;
             }
 //test
             if (first)
@@ -150,8 +158,7 @@ namespace WindowsFormsApp1
         }
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
-            this.Close();
+            System.Environment.Exit(0);
         }
 
         private void timer2_Tick(object sender, EventArgs e)
@@ -188,6 +195,49 @@ namespace WindowsFormsApp1
             enterY = 0;
             this.BringToFront();
             this.TopMost = true;
+        }
+        
+        private void concernModelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!concern)
+            {
+                concern = true;ModelTimer.Enabled = true;
+                concernModelToolStripMenuItem.Text = "Concern Model (√)";
+                GoldPrice.BalloonTipTitle = "关注模式已启动";//设置系统托盘启动时显示的文本
+                GoldPrice.BalloonTipText = "仅每天下午的2点到4点显示报表";//设置系统托盘启动时显示的文本
+                GoldPrice.BalloonTipIcon = ToolTipIcon.Info;
+                GoldPrice.Visible = true;
+                GoldPrice.ShowBalloonTip(3000);
+            }
+            else
+            {
+                concern = false; ModelTimer.Enabled = false;
+                concernModelToolStripMenuItem.Text = "Start Concern Model";
+                this.Visible = true;
+                GoldPrice.BalloonTipTitle = "关注模式已关闭";//设置系统托盘启动时显示的文本
+                GoldPrice.BalloonTipIcon = ToolTipIcon.Info;
+                GoldPrice.Visible = true;
+                GoldPrice.ShowBalloonTip(3000);
+            }
+        }
+
+        private void ModelTimer_Tick(object sender, EventArgs e)
+        {
+
+            //关注模式
+            //每天下午的2点到4点显示窗体，其余时间不显示
+            if(concern)
+            {
+                DateTime dt = DateTime.Now;
+                if (dt.ToString("HH:mm").IndexOf("14:") != -1|| dt.ToString("HH:mm").IndexOf("15:") != -1||dt.ToString("HH:mm").IndexOf("16:") != -1)
+                {
+                    this.Visible = true;
+                }
+                else
+                {
+                    this.Visible = false;
+                }
+            }
         }
     }
 }

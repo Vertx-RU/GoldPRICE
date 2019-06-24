@@ -153,10 +153,7 @@ namespace WindowsFormsApp1
             if (nowprice != Convert.ToDouble(element.TextContent) * 285)
             {
                 System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint = new System.Windows.Forms.DataVisualization.Charting.DataPoint();
-                dataPoint.YValues = new double [Convert.ToInt32(Convert.ToDouble(element.TextContent) * 285)];
-                // dataPoint.YValues = Convert.ToDouble(Convert.ToDouble(element.TextContent) * 285);
-
-               chart1.Series[0].Points.Add(dataPoint);
+               chart1.Series[0].Points.Add(Convert.ToDouble(Convert.ToDouble(element.TextContent) * 285));
                 string tmp = File.ReadAllText("PriceList.txt");
                 File.WriteAllText("PriceList.txt", tmp + (Convert.ToDouble(element.TextContent) * 285).ToString() + "\r\n");
                 nowprice = Convert.ToDouble(element.TextContent) * 285;

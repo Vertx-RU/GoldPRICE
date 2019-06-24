@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.IO;
 using WebKit;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace WindowsFormsApp1
 {
@@ -44,7 +45,10 @@ namespace WindowsFormsApp1
             browser.Navigate("http://fund.eastmoney.com/002611.html?spm=aladin");
             browser.DocumentCompleted += Browser_DocumentCompleted;
             this.TopMost = true;
-
+            chart1.ChartAreas[0].CursorX.IsUserEnabled = true;
+            chart1.ChartAreas[0].CursorY.IsUserEnabled = true;
+            chart1.Series[0].MarkerStyle = MarkerStyle.Circle;
+            chart1.Series[0].MarkerSize = 2;
             if (File.Exists("PriceList.txt"))
             {
                 string[] tmp = File.ReadAllText("PriceList.txt").Split(new string[] { "\r\n" }, StringSplitOptions.None);
@@ -148,7 +152,11 @@ namespace WindowsFormsApp1
             }
             if (nowprice != Convert.ToDouble(element.TextContent) * 285)
             {
-                chart1.Series[0].Points.Add(Convert.ToDouble(Convert.ToDouble(element.TextContent) * 285));
+                System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint = new System.Windows.Forms.DataVisualization.Charting.DataPoint();
+                dataPoint.YValues = new double [Convert.ToInt32(Convert.ToDouble(element.TextContent) * 285)];
+                // dataPoint.YValues = Convert.ToDouble(Convert.ToDouble(element.TextContent) * 285);
+
+               chart1.Series[0].Points.Add(dataPoint);
                 string tmp = File.ReadAllText("PriceList.txt");
                 File.WriteAllText("PriceList.txt", tmp + (Convert.ToDouble(element.TextContent) * 285).ToString() + "\r\n");
                 nowprice = Convert.ToDouble(element.TextContent) * 285;
@@ -186,6 +194,7 @@ namespace WindowsFormsApp1
                 Top += e.Location.Y - enterY;
                 this.TopMost = true;
             }
+
         }
 
         private void panel1_MouseUp(object sender, MouseEventArgs e)
@@ -237,6 +246,23 @@ namespace WindowsFormsApp1
                 {
                     this.Visible = false;
                 }
+            }
+        }
+
+        private void chart1_MouseMove(object sender, MouseEventArgs e)
+        {
+            chart1.ChartAreas[0].CursorX.SetCursorPixelPosition(new PointF(e.X, e.Y), true);
+            chart1.ChartAreas[0].CursorY.SetCursorPixelPosition(new PointF(e.X, e.Y), true);
+            //Application.DoEvents(); 使用此方法当有线程操作时会引发异常
+        }
+
+        private void chart1_GetToolTipText(object sender, System.Windows.Forms.DataVisualization.Charting.ToolTipEventArgs e)
+        {
+            if (e.HitTestResult.ChartElementType == ChartElementType.DataPoint)
+            {
+                int i = e.HitTestResult.PointIndex;
+                DataPoint dp = e.HitTestResult.Series.Points[i];
+                label3.Text = string.Format("{1:F3}", dp.XValue, dp.YValues[0]);
             }
         }
     }

@@ -35,6 +35,7 @@
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.GoldPrice = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.concernModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.price = new System.Windows.Forms.Label();
@@ -46,8 +47,8 @@
             this.percent = new System.Windows.Forms.Label();
             this.ppercent = new System.Windows.Forms.Label();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.concernModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ModelTimer = new System.Windows.Forms.Timer(this.components);
+            this.label3 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -66,8 +67,16 @@
             this.concernModelToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(198, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(198, 48);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // concernModelToolStripMenuItem
+            // 
+            this.concernModelToolStripMenuItem.MergeIndex = 1;
+            this.concernModelToolStripMenuItem.Name = "concernModelToolStripMenuItem";
+            this.concernModelToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.concernModelToolStripMenuItem.Text = "Start Concern Model";
+            this.concernModelToolStripMenuItem.Click += new System.EventHandler(this.concernModelToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -147,12 +156,14 @@
             this.chart1.Size = new System.Drawing.Size(518, 62);
             this.chart1.TabIndex = 9;
             this.chart1.Text = "chart1";
+            this.chart1.GetToolTipText += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.ToolTipEventArgs>(this.chart1_GetToolTipText);
             this.chart1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
-            this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
+            this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
             this.chart1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.checkBox1);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.price);
@@ -218,18 +229,21 @@
             this.timer2.Interval = 5000;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
-            // concernModelToolStripMenuItem
-            // 
-            this.concernModelToolStripMenuItem.MergeIndex = 1;
-            this.concernModelToolStripMenuItem.Name = "concernModelToolStripMenuItem";
-            this.concernModelToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.concernModelToolStripMenuItem.Text = "Start Concern Model";
-            this.concernModelToolStripMenuItem.Click += new System.EventHandler(this.concernModelToolStripMenuItem_Click);
-            // 
             // ModelTimer
             // 
             this.ModelTimer.Interval = 1000;
             this.ModelTimer.Tick += new System.EventHandler(this.ModelTimer_Tick);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("微软雅黑", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label3.ForeColor = System.Drawing.Color.Lime;
+            this.label3.Location = new System.Drawing.Point(3, 32);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(34, 14);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "000.00";
             // 
             // Form1
             // 
@@ -273,6 +287,7 @@
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.ToolStripMenuItem concernModelToolStripMenuItem;
         private System.Windows.Forms.Timer ModelTimer;
+        private System.Windows.Forms.Label label3;
     }
 }
 

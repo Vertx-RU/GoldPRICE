@@ -51,7 +51,9 @@ namespace WindowsFormsApp1
             browser.Width = 0;
             browser.Height = 0;
             this.Controls.Add(browser);
-            browser.Navigate("http://fund.eastmoney.com/002611.html?spm=aladin");
+ //      browser.Navigate("http://fund.eastmoney.com/002611.html?spm=aladin");
+
+            browser.Url = new Uri("http://fund.eastmoney.com/002611.html?spm=aladin");
             browser.DocumentCompleted += Browser_DocumentCompleted;
             this.TopMost = true;
             chart1.ChartAreas[0].CursorX.IsUserEnabled = true;
@@ -121,14 +123,22 @@ namespace WindowsFormsApp1
             Getdata();
             timer1.Start();
             timer2.Start();
+            browser.Dispose();
         }
 
         double nowprice = 0;
         private void timer1_Tick(object sender, EventArgs e)
         {
-            //只有在不是交易模式的情况下 才会去每秒收集数据
+            try
+            {
                 Getdata();
-                browser.Reload();
+                
+            }
+            catch
+            {
+
+            }
+            browser.Reload();
         }
         private void Getdata()
         {
@@ -487,6 +497,11 @@ namespace WindowsFormsApp1
             {
                 timerShowHide.Start();
             }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            GoldPrice.Dispose();
         }
     }
 }

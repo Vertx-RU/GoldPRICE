@@ -186,7 +186,7 @@ namespace WindowsFormsApp1
             GoldPrice.Dispose();
             System.Environment.Exit(0);
         }
-
+        
         private void timer2_Tick(object sender, EventArgs e)
         {
             Getdata();

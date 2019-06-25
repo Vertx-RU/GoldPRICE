@@ -21,20 +21,12 @@ namespace WindowsFormsApp1
             InitializeComponent();
         }
         WebKit.WebKitBrowser browser = new WebKitBrowser();
-        WebKit.DOM.Element element;
-        WebKit.DOM.Element element2;
-        WebKit.DOM.Element element3;
-        WebKit.DOM.Element element4;
-        WebKit.DOM.Element element5;
-        WebKit.DOM.Element element6;
-        WebKit.DOM.Element element7;
         private static bool IsDrag = false;
         private int enterX;
         private int enterY;
         bool first = true;
         bool concern = false;//默认关闭状态
         bool Market = false;//交易模式默认关闭
-        System.Windows.Forms.NotifyIcon notifyIcon = null;
         double min = 0;
         double max = 0;
         bool LeftHide = false;
@@ -123,7 +115,7 @@ namespace WindowsFormsApp1
             Getdata();
             timer1.Start();
             timer2.Start();
-            browser.Dispose();
+            
         }
 
         double nowprice = 0;
@@ -142,6 +134,9 @@ namespace WindowsFormsApp1
         }
         private void Getdata()
         {
+            WebKit.DOM.Element element;
+            WebKit.DOM.Element element2;
+            WebKit.DOM.Element element3;
             element = browser.Document.GetElementById("gz_gsz");
             element2 = browser.Document.GetElementById("gz_gszze");
             element3 = browser.Document.GetElementById("gz_gszzl");
@@ -169,7 +164,6 @@ namespace WindowsFormsApp1
                 chart1.ChartAreas[0].AxisY.Minimum = min;
                 chart1.ChartAreas[0].AxisY.Maximum = max;
             }
-//test
             if (first)
             {
                 first = false;
@@ -183,8 +177,9 @@ namespace WindowsFormsApp1
                 File.WriteAllText("PriceList.txt", tmp + (Convert.ToDouble(element.TextContent) * 285).ToString() + "\r\n");
                 nowprice = Convert.ToDouble(element.TextContent) * 285;
             }
-           
-
+            browser.Dispose();
+            browser.Url = new Uri("http://fund.eastmoney.com/002611.html?spm=aladin");
+            browser.DocumentCompleted += Browser_DocumentCompleted;
         }
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {

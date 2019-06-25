@@ -17,3 +17,4 @@ E:\C#\AlipayGoldPrice\WindowsFormsApp1\obj\Release\WindowsFormsApp1.exe
 E:\C#\AlipayGoldPrice\WindowsFormsApp1\obj\Release\WindowsFormsApp1.pdb
 E:\C#\AlipayGoldPrice\WindowsFormsApp1\obj\Release\WindowsFormsApp1.Home.resources
 D:\GOLD\WindowsFormsApp1\WindowsFormsApp1\obj\Release\WindowsFormsApp1.Home.resources
+E:\C#\AlipayGoldPrice\WindowsFormsApp1\obj\Release\WindowsFormsApp1.csprojAssemblyReference.cache

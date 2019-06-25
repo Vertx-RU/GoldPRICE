@@ -10,6 +10,7 @@ using System.Net;
 using System.IO;
 using WebKit;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Runtime.InteropServices;
 
 namespace WindowsFormsApp1
 {
@@ -35,6 +36,8 @@ namespace WindowsFormsApp1
         System.Windows.Forms.NotifyIcon notifyIcon = null;
         double min = 0;
         double max = 0;
+        [DllImport("User32.dll")]
+        public static extern bool PtInRect(ref Rectangle Rects, Point lpPoint);
         private void Form1_Load(object sender, EventArgs e)
         {
             this.Location = new Point(0, 0);
@@ -260,6 +263,35 @@ namespace WindowsFormsApp1
                 int i = e.HitTestResult.PointIndex;
                 DataPoint dp = e.HitTestResult.Series.Points[i];
                 label3.Text = string.Format("{1:F3}", dp.XValue, dp.YValues[0]);
+            }
+        }
+
+        private void timerShowHide_Tick(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Normal)
+            {
+
+                System.Drawing.Point cursorPoint = new Point(System.Windows.Forms.Cursor.Position.X, System.Windows.Forms.Cursor.Position.Y);//获取鼠标在屏幕的坐标点
+                Rectangle Rects = new Rectangle(this.Left, this.Top, this.Left + this.Width, this.Top + this.Height);//存储当前窗体在屏幕的所在区域
+                bool prInRect = PtInRect(ref Rects, cursorPoint);
+                if (prInRect)
+                {//当鼠标在当前窗体内
+                    if (this.Top < 0)//窗体的Top属性小于0
+                        this.Top = 0;
+                    else if (this.Left < 0)//窗体的Left属性小于0
+                        this.Left = 0;
+                    else if (this.Right > Screen.PrimaryScreen.WorkingArea.Width)//窗体的Right属性大于屏幕宽度
+                        this.Left = Screen.PrimaryScreen.WorkingArea.Width - this.Width;
+                }
+            }
+            else
+            {
+                if (this.Top < 5)               //当窗体的上边框与屏幕的顶端的距离小于5时
+                this.Top = 5 - this.Height; //将窗体隐藏到屏幕的顶端
+                else if (this.Left < 5)         //当窗体的左边框与屏幕的左端的距离小于5时
+                this.Left = 5 - this.Width; //将窗体隐藏到屏幕的左端
+                else if (this.Right > Screen.PrimaryScreen.WorkingArea.Width - 5)//当窗体的右边框与屏幕的右端的距离小于5时
+                this.Left = Screen.PrimaryScreen.WorkingArea.Width - 5;//将窗体隐藏到屏幕的右端
             }
         }
     }

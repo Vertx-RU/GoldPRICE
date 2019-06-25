@@ -225,6 +225,7 @@
             this.checkBox1.TabIndex = 10;
             this.checkBox1.Text = "Drag";
             this.checkBox1.UseVisualStyleBackColor = false;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // percent
             // 

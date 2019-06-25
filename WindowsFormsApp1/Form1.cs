@@ -60,6 +60,12 @@ namespace WindowsFormsApp1
             chart1.Series[0].MarkerSize = 2;
             if (File.Exists("PriceList.txt"))
             {
+                FileInfo fi = new FileInfo("PriceList.txt");
+                DateTime LastWriteTime = fi.LastWriteTime;
+                if (LastWriteTime.Date.Month < DateTime.Now.Month || LastWriteTime.Date.Day < DateTime.Now.Day)
+                {
+                    File.Create("PriceList.txt").Close();
+                }
                 string[] tmp = File.ReadAllText("PriceList.txt").Split(new string[] { "\r\n" }, StringSplitOptions.None);
                 for (int i = 0; i < tmp.Length; i++)
                 {
@@ -469,6 +475,14 @@ namespace WindowsFormsApp1
         private void chart1_MouseLeave(object sender, EventArgs e)
         {
            // StartHide();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == false)
+            {
+                StartHide();
+            }
         }
     }
 }

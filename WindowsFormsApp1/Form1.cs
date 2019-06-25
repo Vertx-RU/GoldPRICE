@@ -237,8 +237,11 @@ namespace WindowsFormsApp1
             //每天下午的2点到4点显示窗体，其余时间不显示
             if(concern)
             {
-                DateTime dt = DateTime.Now;
-                if (dt.ToString("HH:mm").IndexOf("14:") != -1|| dt.ToString("HH:mm").IndexOf("15:") != -1||dt.ToString("HH:mm").IndexOf("16:") != -1)
+                DateTime dt1 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 14, 0, 0);
+                DateTime dt2 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 16, 0, 0);
+                TimeSpan ts1 = dt1.Subtract(DateTime.Now);
+                TimeSpan ts2 = dt2.Subtract(DateTime.Now);
+                if (ts1.TotalSeconds < 0 && ts2.TotalSeconds > 1)
                 {
                     this.Visible = true;
                 }

@@ -301,11 +301,11 @@ namespace WindowsFormsApp1
                 TimeSpan ts2 = end.Subtract(DateTime.Now);
                 if (ts1.TotalSeconds < 0 && ts2.TotalSeconds > 1)
                 {
-                    Getdata();
-                    browser.Reload();
+                    timer1.Enabled = true;
                 }
                 else
                 {
+                    timer1.Enabled = false;
                     DateTime dt = DateTime.Now;
                     //18:01 的时候清空txt数据
                     if (dt.ToString("HH:mm:ss").IndexOf("18:01") != -1)
@@ -385,6 +385,7 @@ namespace WindowsFormsApp1
             //交易模式
             if (!Market)
             {
+                timer1.Enabled = true;
                 Market = true; ModelTimer.Enabled = true;
                 startGeneralModelToolStripMenuItem.Text = "Market Model (√)";
                 GoldPrice.BalloonTipTitle = "交易模式已启动";//设置系统托盘启动时显示的文本
@@ -395,6 +396,7 @@ namespace WindowsFormsApp1
             }
             else
             {
+                timer1.Enabled = true;
                 Market = false; ModelTimer.Enabled = false;
                 startGeneralModelToolStripMenuItem.Text = "Start Market Model";
                 GoldPrice.BalloonTipTitle = "交易模式已关闭";//设置系统托盘启动时显示的文本

@@ -166,6 +166,7 @@ namespace WindowsFormsApp1
         }
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            GoldPrice.Dispose();
             System.Environment.Exit(0);
         }
 
@@ -296,6 +297,12 @@ namespace WindowsFormsApp1
                 else if (this.Right > Screen.PrimaryScreen.WorkingArea.Width - 5)//当窗体的右边框与屏幕的右端的距离小于5时
                 this.Left = Screen.PrimaryScreen.WorkingArea.Width - 5;//将窗体隐藏到屏幕的右端
             }
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            //释放托盘
+            GoldPrice.Dispose();
         }
     }
 }

@@ -482,6 +482,11 @@ namespace WindowsFormsApp1
             if (checkBox1.Checked == false)
             {
                 StartHide();
+                timerShowHide.Stop();
+            }
+            else
+            {
+                timerShowHide.Start();
             }
         }
     }

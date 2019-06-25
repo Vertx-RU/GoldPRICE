@@ -267,6 +267,7 @@
             // 
             // timerShowHide
             // 
+            this.timerShowHide.Enabled = true;
             this.timerShowHide.Tick += new System.EventHandler(this.timerShowHide_Tick);
             // 
             // HideTimer

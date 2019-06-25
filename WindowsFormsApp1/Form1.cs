@@ -127,11 +127,8 @@ namespace WindowsFormsApp1
         private void timer1_Tick(object sender, EventArgs e)
         {
             //只有在不是交易模式的情况下 才会去每秒收集数据
-            if(!Market)
-            {
                 Getdata();
                 browser.Reload();
-            }
         }
         private void Getdata()
         {
@@ -305,7 +302,7 @@ namespace WindowsFormsApp1
                 }
                 else
                 {
-                    timer1.Enabled = false;
+                    timer1.Enabled = false; timer2.Enabled = false;
                     DateTime dt = DateTime.Now;
                     //18:01 的时候清空txt数据
                     if (dt.ToString("HH:mm:ss").IndexOf("18:01") != -1)

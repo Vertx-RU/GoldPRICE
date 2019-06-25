@@ -33,13 +33,19 @@ namespace WindowsFormsApp1
         private int enterY;
         bool first = true;
         bool concern = false;//默认关闭状态
+        bool Market = false;//交易模式默认关闭
         System.Windows.Forms.NotifyIcon notifyIcon = null;
         double min = 0;
         double max = 0;
+        bool LeftHide = false;
+        bool RightHide = false;
+        bool isfinish = true;
+        Rectangle ScreenArea;
         [DllImport("User32.dll")]
         public static extern bool PtInRect(ref Rectangle Rects, Point lpPoint);
         private void Form1_Load(object sender, EventArgs e)
         {
+             ScreenArea = System.Windows.Forms.Screen.GetWorkingArea(this);
             this.Location = new Point(0, 0);
             browser.Location = new Point(0,0);
             browser.Width = 0;
@@ -114,8 +120,12 @@ namespace WindowsFormsApp1
         double nowprice = 0;
         private void timer1_Tick(object sender, EventArgs e)
         {
-            Getdata();
-            browser.Reload();
+            //只有在不是交易模式的情况下 才会去每秒收集数据
+            if(!Market)
+            {
+                Getdata();
+                browser.Reload();
+            }
         }
         private void Getdata()
         {
@@ -155,7 +165,6 @@ namespace WindowsFormsApp1
             }
             if (nowprice != Convert.ToDouble(element.TextContent) * 285)
             {
-                System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint = new System.Windows.Forms.DataVisualization.Charting.DataPoint();
                chart1.Series[0].Points.Add(Convert.ToDouble(Convert.ToDouble(element.TextContent) * 285));
                 string tmp = File.ReadAllText("PriceList.txt");
                 File.WriteAllText("PriceList.txt", tmp + (Convert.ToDouble(element.TextContent) * 285).ToString() + "\r\n");
@@ -205,6 +214,27 @@ namespace WindowsFormsApp1
             enterY = 0;
             this.BringToFront();
             this.TopMost = true;
+           
+            StartHide();
+        }
+        private void StartHide()
+        {
+            if (checkBox1.Checked == false)
+            {
+                if ((this.Location.X == 0 || this.Location.X < 5) && isfinish)
+                {
+                    LeftHide = true;
+                    isfinish = false;
+                    HideTimer.Start();
+                }
+
+                if ((this.Location.X + this.Width >= ScreenArea.Width || this.Location.X + this.Width > ScreenArea.Width - 5) && isfinish)
+                {
+                    RightHide = true;
+                    isfinish = false;
+                    HideTimer.Start();
+                }
+            }
         }
         
         private void concernModelToolStripMenuItem_Click(object sender, EventArgs e)
@@ -236,7 +266,8 @@ namespace WindowsFormsApp1
 
             //关注模式
             //每天下午的2点到4点显示窗体，其余时间不显示
-            if(concern)
+            #region
+            if (concern)
             {
                 DateTime dt1 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 14, 0, 0);
                 DateTime dt2 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 16, 0, 0);
@@ -251,6 +282,36 @@ namespace WindowsFormsApp1
                     this.Visible = false;
                 }
             }
+            #endregion
+            //交易模式
+            //每天的08:59至18:00期间收集数据
+            #region
+            if (Market)
+            {
+                //交易模式开始于结束时间
+                DateTime start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 08, 59, 0);
+                DateTime end = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 18, 0, 0);
+                TimeSpan ts1 = start.Subtract(DateTime.Now);
+                TimeSpan ts2 = end.Subtract(DateTime.Now);
+                if (ts1.TotalSeconds < 0 && ts2.TotalSeconds > 1)
+                {
+                    Getdata();
+                    browser.Reload();
+                }
+                else
+                {
+                    DateTime dt = DateTime.Now;
+                    //18:01 的时候清空txt数据
+                    if (dt.ToString("HH:mm:ss").IndexOf("18:01") != -1)
+                    {
+                        FileStream stream = File.Open("PriceList.txt", FileMode.OpenOrCreate, FileAccess.Write);
+                        stream.Seek(0, SeekOrigin.Begin);
+                        stream.SetLength(0);
+                        stream.Close();
+                    }
+                }
+            }
+            #endregion
         }
 
         private void chart1_MouseMove(object sender, MouseEventArgs e)
@@ -258,6 +319,14 @@ namespace WindowsFormsApp1
             chart1.ChartAreas[0].CursorX.SetCursorPixelPosition(new PointF(e.X, e.Y), true);
             chart1.ChartAreas[0].CursorY.SetCursorPixelPosition(new PointF(e.X, e.Y), true);
             //Application.DoEvents(); 使用此方法当有线程操作时会引发异常
+            if (checkBox1.Checked == false)
+            {
+                if ((LeftHide || RightHide) && isfinish)
+                {
+                    isfinish = false;
+                    ShowTimer.Start();
+                }
+            }
         }
 
         private void chart1_GetToolTipText(object sender, System.Windows.Forms.DataVisualization.Charting.ToolTipEventArgs e)
@@ -303,6 +372,103 @@ namespace WindowsFormsApp1
         {
             //释放托盘
             GoldPrice.Dispose();
+        }
+
+        private void startGeneralModelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //交易模式
+            if (!Market)
+            {
+                Market = true; ModelTimer.Enabled = true;
+                startGeneralModelToolStripMenuItem.Text = "Market Model (√)";
+                GoldPrice.BalloonTipTitle = "交易模式已启动";//设置系统托盘启动时显示的文本
+                GoldPrice.BalloonTipText = "只接收每天9点到18点数据";//设置系统托盘启动时显示的文本
+                GoldPrice.BalloonTipIcon = ToolTipIcon.Info;
+                GoldPrice.Visible = true;
+                GoldPrice.ShowBalloonTip(3000);
+            }
+            else
+            {
+                Market = false; ModelTimer.Enabled = false;
+                startGeneralModelToolStripMenuItem.Text = "Start Market Model";
+                GoldPrice.BalloonTipTitle = "交易模式已关闭";//设置系统托盘启动时显示的文本
+                GoldPrice.BalloonTipIcon = ToolTipIcon.Info;
+                GoldPrice.Visible = true;
+                GoldPrice.ShowBalloonTip(3000);
+            }
+        }
+
+        private void HideTimer_Tick(object sender, EventArgs e)
+        {
+            if (LeftHide)
+            {
+                if (this.Location.X <= -this.Width + 8)
+                {
+                    isfinish = true;
+                    HideTimer.Stop();
+                    this.Location = new Point(-this.Width + 5, this.Location.Y);
+                }
+                else
+                {
+                    this.Location = new Point(this.Location.X - 20, this.Location.Y);
+                }
+            }
+            if (RightHide)
+            {
+               
+                if (this.Location.X+8>= ScreenArea.Width)
+                {
+                    isfinish = true;
+                    HideTimer.Stop();
+                    this.Location = new Point(ScreenArea.Width - 5, this.Location.Y);
+                }
+                else
+                {
+                    this.Location = new Point(this.Location.X + 20, this.Location.Y);
+                }
+            }
+        }
+
+        private void ShowTimer_Tick(object sender, EventArgs e)
+        {
+            if (LeftHide)
+            {
+                if (this.Location.X >= 0)
+                {
+                    LeftHide = false;
+                    isfinish = true;
+                    ShowTimer.Stop();
+                    this.Location = new Point(0, this.Location.Y);
+                }
+                else
+                {
+                    this.Location = new Point(this.Location.X + 20, this.Location.Y);
+                }
+            }
+            if (RightHide)
+            {
+                if (this.Location.X <= ScreenArea.Width-this.Width)
+                {
+                    RightHide = false;
+                    isfinish = true;
+                    ShowTimer.Stop();
+                    this.Location = new Point(ScreenArea.Width - this.Width, this.Location.Y);
+                }
+                else
+                {
+                    this.Location = new Point(this.Location.X - 20, this.Location.Y);
+                }
+            }
+        }
+
+        private void label1_MouseLeave(object sender, EventArgs e)
+        {
+            StartHide();
+        }
+
+        private void chart1_MouseLeave(object sender, EventArgs e)
+        {
+           // StartHide();
         }
     }
 }

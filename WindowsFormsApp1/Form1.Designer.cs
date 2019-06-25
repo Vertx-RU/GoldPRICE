@@ -35,6 +35,7 @@
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.GoldPrice = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.startGeneralModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.concernModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
@@ -50,6 +51,8 @@
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.ModelTimer = new System.Windows.Forms.Timer(this.components);
             this.timerShowHide = new System.Windows.Forms.Timer(this.components);
+            this.HideTimer = new System.Windows.Forms.Timer(this.components);
+            this.ShowTimer = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -65,11 +68,20 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.startGeneralModelToolStripMenuItem,
             this.concernModelToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(198, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(198, 70);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // startGeneralModelToolStripMenuItem
+            // 
+            this.startGeneralModelToolStripMenuItem.MergeIndex = 2;
+            this.startGeneralModelToolStripMenuItem.Name = "startGeneralModelToolStripMenuItem";
+            this.startGeneralModelToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.startGeneralModelToolStripMenuItem.Text = "Start Market Model";
+            this.startGeneralModelToolStripMenuItem.Click += new System.EventHandler(this.startGeneralModelToolStripMenuItem_Click);
             // 
             // concernModelToolStripMenuItem
             // 
@@ -97,6 +109,7 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "RealTime Gold Price:";
             this.label1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
+            this.label1.MouseLeave += new System.EventHandler(this.label1_MouseLeave);
             this.label1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
             this.label1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);
             // 
@@ -159,6 +172,7 @@
             this.chart1.Text = "chart1";
             this.chart1.GetToolTipText += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.ToolTipEventArgs>(this.chart1_GetToolTipText);
             this.chart1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
+            this.chart1.MouseLeave += new System.EventHandler(this.chart1_MouseLeave);
             this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
             this.chart1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);
             // 
@@ -191,10 +205,14 @@
             this.label3.Size = new System.Drawing.Size(34, 14);
             this.label3.TabIndex = 11;
             this.label3.Text = "000.00";
+            this.label3.MouseLeave += new System.EventHandler(this.label1_MouseLeave);
+            this.label3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
             // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox1.FlatAppearance.BorderColor = System.Drawing.Color.Lime;
             this.checkBox1.FlatAppearance.CheckedBackColor = System.Drawing.Color.Black;
             this.checkBox1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Black;
@@ -248,8 +266,17 @@
             // 
             // timerShowHide
             // 
-            this.timerShowHide.Enabled = true;
             this.timerShowHide.Tick += new System.EventHandler(this.timerShowHide_Tick);
+            // 
+            // HideTimer
+            // 
+            this.HideTimer.Interval = 10;
+            this.HideTimer.Tick += new System.EventHandler(this.HideTimer_Tick);
+            // 
+            // ShowTimer
+            // 
+            this.ShowTimer.Interval = 10;
+            this.ShowTimer.Tick += new System.EventHandler(this.ShowTimer_Tick);
             // 
             // Form1
             // 
@@ -296,6 +323,9 @@
         private System.Windows.Forms.Timer ModelTimer;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Timer timerShowHide;
+        private System.Windows.Forms.ToolStripMenuItem startGeneralModelToolStripMenuItem;
+        private System.Windows.Forms.Timer HideTimer;
+        private System.Windows.Forms.Timer ShowTimer;
     }
 }
 
